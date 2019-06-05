@@ -1,0 +1,91 @@
+---
+title: "ESM_204_Assignment_4"
+author: "Andrew Paterson"
+date: "6/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+
+```
+
+
+```{r}
+
+climate_raw <- read_csv("HW4Data.csv")
+
+```
+
+1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your
+memo).
+
+```{r}
+
+lm_a <- lm(MC_A ~ Abatement, data = climate_raw)
+
+lm_b <- lm(MC_B ~ Abatement, data = climate_raw)
+
+lm_c <- lm(MC_C ~ Abatement, data = climate_raw)
+
+lm_d <- lm(MC_D ~ Abatement, data = climate_raw)
+
+summary(lm_a)
+summary(lm_b)
+summary(lm_c)
+summary(lm_d)
+
+all_model_plot <- ggplot(climate_raw, aes(x = Abatement)) +
+  geom_smooth(aes(y = MC_A), method = lm, se = TRUE, size = 0.5, color = "red")+
+  geom_smooth(aes(y = MC_B), method = lm, se = TRUE, size = 0.5, color = "green")+
+  geom_smooth(aes(y = MC_C), method = lm, se = TRUE, size = 0.5, color = "blue")+
+  geom_smooth(aes(y = MC_D), method = lm, se = TRUE, size = 0.5, color = "purple")+
+  geom_point(aes(y = MC_A, color = "MC_A"))+
+  geom_point(aes(y = MC_B, color = "MC_B"))+
+  geom_point(aes(y = MC_C, color = "MC_C"))+
+  geom_point(aes(y = MC_D, color = "MC_D"))
+
+all_model_plot
+
+A_model_plot
+
+```
+
+As long as carbon credits are more expensive than this, they will abate
+
+Sector A: MC_abatement = 0.57684x - 8.64448; A = 180
+Sector B: MC_abatement = 9.31770 + 0.19874x; B= 200
+Sector C: MC_abatement = 0.78383x - 11.65503; C = 220
+Sector D: MC_abatement = 9.68751 + 0.25993x; D = 300
+
+2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
+
+
+
+3. Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half.
+
+For each of the policy options listed below, derive: 
+
+(1) the total cost of meeting the target in country X,
+(2) the cost (or benefit) to each sector, and (3) the tax revenue generated.
+
+a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total emissions from 600 down to 300).
+
+b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.
+
+c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.
+
+4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap
+on its emissions? Are there any incentives for country X to try to attract country Y into its market?
+
+5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted.
+Assume there are no local air pollution regulations in either country X or country Y.
+
+a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
+b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
+c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
